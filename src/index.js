@@ -24,7 +24,6 @@ const cardImg = document.querySelector('.card__image');
 const closePopupButtons = document.querySelectorAll('.popup__close');
 
 //popupEdit 
-
 const nameInput = popupEdit.querySelector('.popup__input_type_name');
 const jobInput = popupEdit.querySelector('.popup__input_type_description');
 
@@ -41,7 +40,6 @@ addButton.addEventListener('click', () => {
     openPopup(popupNewCard);
 });
 
-//tranfer to createcards?
 cardImg.addEventListener('click', () => {
     openPopup(popupImg);
 });
@@ -57,7 +55,7 @@ closePopupButtons.forEach((button) => {
 //TODO: add event listener on click to overlay to close modal;
 
 //editprofile functional
-function handleFormSubmit(evt) {
+function editProfile(evt) {
     evt.preventDefault();
 
     const name = nameInput.value;
@@ -69,18 +67,43 @@ function handleFormSubmit(evt) {
     closePopup(popupEdit);
 }
 
-const formElement = document.querySelector('.popup__form');
+popupEdit.addEventListener('submit', editProfile);
 
-formElement.addEventListener('submit', handleFormSubmit);
+//add new cards
+const newCardForm = popupNewCard.querySelector('.popup__form');
 
+function addNewCard (evt) {
+    evt.preventDefault();
 
+    const cardTitle = newCardForm.querySelector('.popup__input_type_card-name').value;
+    const imageUrl = newCardForm.querySelector('.popup__input_type_url').value;
 
+    const cardData = {
+        name: cardTitle,
+        link: imageUrl,
+        alt: cardTitle
+    };
 
+    const newCard = createCard(cardData, deleteCard);
+    cardsContainer.prepend(newCard);
 
+    closePopup(popupNewCard);
+    newCardForm.reset();
+}
 
+newCardForm.addEventListener('submit', addNewCard);
 
+//open image popup
+export function openImagePopup (link, title) {
+    const image = popupImg.querySelector('.popup__image');
+    const caption = popupImg.querySelector('.popup__caption');
 
-
+    image.src = link;
+    caption.textContent = title;
+    image.alt = title;
+    
+    openPopup(popupImg);
+}
 
 
 
