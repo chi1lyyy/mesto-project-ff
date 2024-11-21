@@ -1,14 +1,12 @@
 import './index.css';
-import { createCard, deleteCard } from './scripts/card.js';
+import { createCard, deleteCard, likeCard } from './scripts/card.js';
 import {initialCards} from './scripts/cards.js';
 import { openPopup, closePopup } from './scripts/modal.js';
 
-
-const cardTemplate = document.querySelector('#card-template').content;
 const cardsContainer = document.querySelector('.places__list');
 
 initialCards.forEach (function(card) {
-    const cardElement = createCard(card, deleteCard);
+    const cardElement = createCard(card, deleteCard, likeCard, openImagePopup);
     cardsContainer.append(cardElement);
 });
 
@@ -81,7 +79,7 @@ function addNewCard (evt) {
         alt: cardTitle
     };
 
-    const newCard = createCard(cardData, deleteCard);
+    const newCard = createCard(cardData, deleteCard, likeCard, openImagePopup);
     cardsContainer.prepend(newCard);
 
     closePopup(popupNewCard);
