@@ -1,5 +1,5 @@
 
-import { openImagePopup } from "..";
+import { openImagePopup } from '../index.js';
 const cardTemplate = document.querySelector('#card-template').content;
 const cardsContainer = document.querySelector('.places__list');
 const popupImg = document.querySelector('.popup_type_image');

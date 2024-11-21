@@ -51,9 +51,6 @@ closePopupButtons.forEach((button) => {
      })
  });
 
-
-//TODO: add event listener on click to overlay to close modal;
-
 //editprofile functional
 function editProfile(evt) {
     evt.preventDefault();
