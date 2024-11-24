@@ -27,6 +27,12 @@ const jobInput = popupEdit.querySelector('.popup__input_type_description');
 
 
 //Popups' functions
+const popups = document.querySelectorAll('.popup');
+
+popups.forEach(popup => {
+    popup.classList.add('popup_is-animated');
+});
+
 editButton.addEventListener('click', () => {
     openPopup(popupEdit);
 
