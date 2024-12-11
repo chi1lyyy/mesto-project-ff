@@ -2,6 +2,7 @@ import './index.css';
 import { createCard, deleteCard, likeCard } from './scripts/card.js';
 import {initialCards} from './scripts/cards.js';
 import { openPopup, closePopup } from './scripts/modal.js';
+import { enableValidation, isValid } from './scripts/validatition.js';
 
 const cardsContainer = document.querySelector('.places__list');
 
@@ -106,6 +107,19 @@ export function openImagePopup (link, title) {
     openPopup(popupImg);
 }
 
+//Validation
+
+
+
+
+enableValidation({
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
+  });
 
 
 

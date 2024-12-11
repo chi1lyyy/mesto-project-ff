@@ -1,5 +1,4 @@
 
-import { openImagePopup } from '../index.js';
 const cardTemplate = document.querySelector('#card-template').content;
 
 export function createCard (cardData, deleteCard, likeCard, openImagePopup) {
