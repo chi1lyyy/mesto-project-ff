@@ -14,9 +14,8 @@
   margin-bottom: 0;
 }
 
-.popup__input_type_error {
-  outline: none;
-  border-bottom: 1px solid #FF0000;
+.popup__input:focus-visible {
+  outline-offset: 1px;
 }
 
 @media screen and (max-width: 568px) {
