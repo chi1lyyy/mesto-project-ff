@@ -3,13 +3,27 @@ import { createCard, deleteCard, likeCard } from './scripts/card.js';
 import {initialCards} from './scripts/cards.js';
 import { openPopup, closePopup } from './scripts/modal.js';
 import { clearValidation, enableValidation} from './scripts/validatition.js';
+import { getUserInfo, getCards, changeProfileInfo, uploadNewCard } from './scripts/api.js';
 
 const cardsContainer = document.querySelector('.places__list');
 
-initialCards.forEach (function(card) {
-    const cardElement = createCard(card, deleteCard, likeCard, openImagePopup);
-    cardsContainer.append(cardElement);
-});
+Promise.all([getUserInfo(), getCards()])
+
+    .then(([userData, cardsData]) => {
+        document.querySelector('.profile__image').style.backgroundImage = `url(${userData.avatar})`;
+        document.querySelector('.profile__title').textContent = userData.name;
+        document.querySelector('.profile__description').textContent = userData.about;
+
+        cardsData.forEach ((card) => {
+            const cardElement = createCard(card, deleteCard, likeCard, openImagePopup);
+            cardsContainer.append(cardElement);
+        });
+    })
+    .catch((error) => {
+        console.log('Ошибка:', error);
+    });
+
+
 
 //Popups
 const popupEdit = document.querySelector('.popup_type_edit');
@@ -47,7 +61,6 @@ popups.forEach(popup => {
 
 editButton.addEventListener('click', () => {
     openPopup(popupEdit);
-    clearValidation(profileForm, validationConfig)
 
     nameInput.value = document.querySelector('.profile__title').textContent;
     jobInput.value = document.querySelector('.profile__description').textContent;
@@ -56,11 +69,11 @@ editButton.addEventListener('click', () => {
 addButton.addEventListener('click', () => {
     openPopup(popupNewCard);
 });
-
+/*
 cardImg.addEventListener('click', () => {
     openPopup(popupImg);
 });
-
+*/
 closePopupButtons.forEach((button) => {
     button.addEventListener('click', (evt) => {
          const popup = evt.target.closest('.popup');
@@ -71,14 +84,25 @@ closePopupButtons.forEach((button) => {
 //editprofile functional
 function editProfile(evt) {
     evt.preventDefault();
-
     const name = nameInput.value;
     const job = jobInput.value;
 
-    document.querySelector('.profile__title').textContent = name;
-    document.querySelector('.profile__description').textContent = job;
 
-    closePopup(popupEdit);
+    const newProfileInfo  = {
+        name: name,
+        about: job
+    };
+    
+    changeProfileInfo(newProfileInfo)
+    .then((data) => {
+        console.log(data);
+        document.querySelector('.profile__title').textContent = data.name;
+        document.querySelector('.profile__description').textContent = data.about;
+        closePopup(popupEdit);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
 }
 
 popupEdit.addEventListener('submit', editProfile);
@@ -92,17 +116,25 @@ function addNewCard (evt) {
     const cardTitle = newCardForm.querySelector('.popup__input_type_card-name').value;
     const imageUrl = newCardForm.querySelector('.popup__input_type_url').value;
 
-    const cardData = {
+    const newCardData = {
         name: cardTitle,
         link: imageUrl,
         alt: cardTitle
     };
 
-    const newCard = createCard(cardData, deleteCard, likeCard, openImagePopup);
-    cardsContainer.prepend(newCard);
+    uploadNewCard(newCardData)
+        .then((data) => {
+            const newCard = createCard(data, deleteCard, likeCard, openImagePopup);
+            cardsContainer.prepend(newCard);
+        
+            closePopup(popupNewCard);
+            newCardForm.reset();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
 
-    closePopup(popupNewCard);
-    newCardForm.reset();
+    
 }
 
 newCardForm.addEventListener('submit', addNewCard);
@@ -123,7 +155,7 @@ export function openImagePopup (link, title) {
 
 
 
-
+/*
 enableValidation({
     formSelector: '.popup__form',
     inputSelector: '.popup__input',
@@ -133,6 +165,7 @@ enableValidation({
     errorClass: 'popup__error_visible'
   });
 
+*/
 
 
 

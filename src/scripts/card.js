@@ -7,11 +7,14 @@ export function createCard (cardData, deleteCard, likeCard, openImagePopup) {
     const cardImage = cardElement.querySelector('.card__image');
     const deleteButton = cardElement.querySelector('.card__delete-button');
     const likeButton = cardElement.querySelector('.card__like-button');
+    const likesCount = cardElement.querySelector('.card__likes-number');
 
 
     cardTitle.textContent = cardData.name;
     cardImage.src = cardData.link;
     cardImage.alt = cardData.name;
+
+    likesCount.textContent = cardData.likes.length;
 
     deleteButton.addEventListener('click', () => {
         deleteCard(cardElement);
@@ -37,5 +40,11 @@ export function deleteCard (cardElement) {
     cardElement.remove();
 }
 
+export function displayCards (cards) {
+    cards.forEach ((card) => {
+        const cardElement = createCard(card, deleteCard, likeCard, openImagePopup);
+        cardsContainer.append(cardElement);
+    })
+};
 
 
