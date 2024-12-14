@@ -2,7 +2,7 @@ import './index.css';
 import { createCard, deleteCard, likeCard } from './scripts/card.js';
 import {initialCards} from './scripts/cards.js';
 import { openPopup, closePopup } from './scripts/modal.js';
-import { enableValidation, isValid } from './scripts/validatition.js';
+import { clearValidation, enableValidation} from './scripts/validatition.js';
 
 const cardsContainer = document.querySelector('.places__list');
 
@@ -26,6 +26,17 @@ const closePopupButtons = document.querySelectorAll('.popup__close');
 const nameInput = popupEdit.querySelector('.popup__input_type_name');
 const jobInput = popupEdit.querySelector('.popup__input_type_description');
 
+//forms
+const profileForm = document.querySelector('.popup__form[name="edit-profile"]');
+
+const validationConfig = { 
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
+}
 
 //Popups' functions
 const popups = document.querySelectorAll('.popup');
@@ -36,6 +47,7 @@ popups.forEach(popup => {
 
 editButton.addEventListener('click', () => {
     openPopup(popupEdit);
+    clearValidation(profileForm, validationConfig)
 
     nameInput.value = document.querySelector('.profile__title').textContent;
     jobInput.value = document.querySelector('.profile__description').textContent;
@@ -72,7 +84,7 @@ function editProfile(evt) {
 popupEdit.addEventListener('submit', editProfile);
 
 //add new cards
-const newCardForm = popupNewCard.querySelector('.popup__form');
+const newCardForm = popupNewCard.querySelector('.popup__form[name="new-place"]');
 
 function addNewCard (evt) {
     evt.preventDefault();
@@ -120,6 +132,7 @@ enableValidation({
     inputErrorClass: 'popup__input_type_error',
     errorClass: 'popup__error_visible'
   });
+
 
 
 

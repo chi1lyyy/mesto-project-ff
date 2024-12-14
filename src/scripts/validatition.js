@@ -76,6 +76,24 @@ export function enableValidation ({
     forms.forEach((formElement) => {
       setEventListeners(formElement, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass)
     });
+};
+
+export function clearValidation(formElement, {
+  formSelector,
+  inputSelector,
+  submitButtonSelector,
+  inactiveButtonClass,
+  inputErrorClass,
+  errorClass
+}) {
+  const inputs = Array.from(formElement.querySelectorAll(inputSelector));
+
+  inputs.forEach((inputElement) => {
+    hideError (formElement, inputElement, inputErrorClass, errorClass);
+  });
+  
+  const buttonElement = formElement.querySelector(submitButtonSelector);
+  toggleSubmitButton (inputs, buttonElement, inactiveButtonClass)
 }
 
 
