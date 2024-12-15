@@ -47,6 +47,7 @@ const avatarLinkInput = popupAvatar.querySelector('.popup__input_type_edit-avata
 
 //forms
 const profileForm = document.querySelector('.popup__form[name="edit-profile"]');
+const newCardForm = popupNewCard.querySelector('.popup__form[name="new-place"]');
 
 const validationConfig = { 
     formSelector: '.popup__form',
@@ -68,6 +69,7 @@ popups.forEach(popup => {
 
 editButton.addEventListener('click', () => {
     openPopup(popupEdit);
+    clearValidation(profileForm, validationConfig);
 
     nameInput.value = document.querySelector('.profile__title').textContent;
     jobInput.value = document.querySelector('.profile__description').textContent;
@@ -107,8 +109,6 @@ addButton.addEventListener('click', () => {
     openPopup(popupNewCard);
 });
 
-const newCardForm = popupNewCard.querySelector('.popup__form[name="new-place"]');
-
 function addNewCard (evt) {
     evt.preventDefault();
 
@@ -129,13 +129,13 @@ function addNewCard (evt) {
             cardsContainer.prepend(newCard);
         
             newCardForm.reset();
+            clearValidation(newCardForm, validationConfig);
             closePopup(popupNewCard);
         })
         .catch((error) => {
             console.log(error);
         })
         .finally(() => {
-        
             saveButton.textContent = 'Сохранить';
         })
 };

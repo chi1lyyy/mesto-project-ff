@@ -1,7 +1,3 @@
-// в файле validzation.js описаны функции для валидации форм. 
-// Из файла экспортируется только функция активации валидации 
-// enableValidation и функция очистки ошибок валидации clearValidation;
-
 //checking input validity 
 function isValid (formElement, inputElement, inputErrorClass, errorClass) {
   if (inputElement.validity.patternMismatch) {

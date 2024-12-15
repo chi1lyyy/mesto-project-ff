@@ -17,9 +17,6 @@ function closeByOverlay (evt) {
     };
 
 export function closePopup (popup) {
-    const form = popup.querySelector('.popup__form');
-    form.reset();
-
     popup.classList.remove('popup_is-opened');
     document.removeEventListener('keydown', closeByEscape);
     document.removeEventListener('click', closeByOverlay)
