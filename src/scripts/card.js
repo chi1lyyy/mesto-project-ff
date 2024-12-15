@@ -3,7 +3,7 @@ import { toDeleteCard, toLikeCard, unlikeCard } from "./api";
 
 const cardTemplate = document.querySelector('#card-template').content;
 
-export function createCard (cardData, deleteCard, openImagePopup) {
+export function createCard (cardData, openImagePopup) {
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
     const cardTitle = cardElement.querySelector('.card__title');
     const cardImage = cardElement.querySelector('.card__image');
@@ -30,24 +30,27 @@ export function createCard (cardData, deleteCard, openImagePopup) {
         })
     });
 
-    const isLiked = cardData.likes.some(user => user._id === currentUser);
+    let isLiked = cardData.likes.some(user => user._id === currentUser);
     if (isLiked) {
         likeButton.classList.add('card__like-button_is-active'); 
     }
 
     likeButton.addEventListener('click', (evt) => {
+       evt.preventDefault();
        
        if (!isLiked) {
         toLikeCard(cardId)
         .then((updatedCardData) => {
             likesCount.textContent = updatedCardData.likes.length;
-            likeButton.classList.add('card__like-button_is-active');                
+            likeButton.classList.add('card__like-button_is-active');
+            isLiked = true;                
         })
        } else {
         unlikeCard(cardId)
         .then((updatedCardData) => {
             likesCount.textContent = updatedCardData.likes.length;
-            likeButton.classList.remove('card__like-button_is-active');  
+            likeButton.classList.remove('card__like-button_is-active'); 
+            isLiked = false; 
         })
        }
     });
@@ -59,20 +62,8 @@ export function createCard (cardData, deleteCard, openImagePopup) {
 
     return cardElement;
 };
-/*
-export function likeCard(likeButton) {
-    likeButton.classList.toggle('card__like-button_is-active');
-}
-*/
+
 export function deleteCard (cardElement) {
     cardElement.remove();
 }
-
-export function displayCards (cards) {
-    cards.forEach ((card) => {
-        const cardElement = createCard(card, deleteCard, likeCard, openImagePopup);
-        cardsContainer.append(cardElement);
-    })
-};
-
 

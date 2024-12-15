@@ -11,10 +11,8 @@ function isValid (formElement, inputElement, inputErrorClass, errorClass) {
   }
 
   if (!inputElement.validity.valid) {
-    //showError
     showError(formElement, inputElement, inputElement.validationMessage, inputErrorClass, errorClass);
   } else {
-    //hideError
     hideError(formElement, inputElement, inputErrorClass, errorClass);
   }
 }
@@ -62,7 +60,6 @@ function toggleSubmitButton (inputs, buttonElement, inactiveButtonClass)  {
     buttonElement.classList.remove(inactiveButtonClass);
   }
 }
-
 
 export function enableValidation ({
     formSelector,

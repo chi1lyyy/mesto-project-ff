@@ -1,9 +1,8 @@
 import './index.css';
-import { createCard, deleteCard, likeCard } from './scripts/card.js';
-import {initialCards} from './scripts/cards.js';
+import { createCard} from './scripts/card.js';
 import { openPopup, closePopup } from './scripts/modal.js';
 import { clearValidation, enableValidation} from './scripts/validatition.js';
-import { getUserInfo, getCards, changeProfileInfo, uploadNewCard } from './scripts/api.js';
+import { getUserInfo, getCards, changeProfileInfo, uploadNewCard, updateProfileAvatar } from './scripts/api.js';
 
 const cardsContainer = document.querySelector('.places__list');
 export let currentUser;
@@ -18,7 +17,7 @@ Promise.all([getUserInfo(), getCards()])
         currentUser = userData._id;
 
         cardsData.forEach ((card) => {
-            const cardElement = createCard(card, deleteCard, openImagePopup);
+            const cardElement = createCard(card, openImagePopup);
             cardsContainer.append(cardElement);
         });
     })
@@ -26,22 +25,25 @@ Promise.all([getUserInfo(), getCards()])
         console.log('Ошибка:', error);
     });
 
-
-
 //Popups
+const popups = document.querySelectorAll('.popup');
 const popupEdit = document.querySelector('.popup_type_edit');
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupImg = document.querySelector('.popup_type_image');
+const popupAvatar = document.querySelector('.popup_type_edit-avatar');
 
 //Popups' buttons
 const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
 const cardImg = document.querySelector('.card__image');
 const closePopupButtons = document.querySelectorAll('.popup__close');
+const avatar = document.querySelector('.profile__image');
+const saveButton = document.querySelector('.popup__button');
 
-//popupEdit 
+//popup inputs
 const nameInput = popupEdit.querySelector('.popup__input_type_name');
 const jobInput = popupEdit.querySelector('.popup__input_type_description');
+const avatarLinkInput = popupAvatar.querySelector('.popup__input_type_edit-avatar');
 
 //forms
 const profileForm = document.querySelector('.popup__form[name="edit-profile"]');
@@ -56,11 +58,13 @@ const validationConfig = {
 }
 
 //Popups' functions
-const popups = document.querySelectorAll('.popup');
+
 
 popups.forEach(popup => {
     popup.classList.add('popup_is-animated');
 });
+
+//Edit profile info functions
 
 editButton.addEventListener('click', () => {
     openPopup(popupEdit);
@@ -69,23 +73,7 @@ editButton.addEventListener('click', () => {
     jobInput.value = document.querySelector('.profile__description').textContent;
 });
 
-addButton.addEventListener('click', () => {
-    openPopup(popupNewCard);
-});
-/*
-cardImg.addEventListener('click', () => {
-    openPopup(popupImg);
-});
-*/
-closePopupButtons.forEach((button) => {
-    button.addEventListener('click', (evt) => {
-         const popup = evt.target.closest('.popup');
-         closePopup(popup);
-     })
- });
-
-//editprofile functional
-function editProfile(evt) {
+function editProfile (evt) {
     evt.preventDefault();
     const name = nameInput.value;
     const job = jobInput.value;
@@ -95,22 +83,30 @@ function editProfile(evt) {
         name: name,
         about: job
     };
+    saveButton.textContent = 'Сохранение...';
     
     changeProfileInfo(newProfileInfo)
     .then((data) => {
-        console.log(data);
         document.querySelector('.profile__title').textContent = data.name;
         document.querySelector('.profile__description').textContent = data.about;
         closePopup(popupEdit);
     })
     .catch((error) => {
         console.log(error);
-    });
-}
+    })
+    .finally(() => {
+        saveButton.textContent = 'Сохранить';
+    })
+};
 
 popupEdit.addEventListener('submit', editProfile);
 
-//add new cards
+//add new cards functions
+
+addButton.addEventListener('click', () => {
+    openPopup(popupNewCard);
+});
+
 const newCardForm = popupNewCard.querySelector('.popup__form[name="new-place"]');
 
 function addNewCard (evt) {
@@ -125,20 +121,24 @@ function addNewCard (evt) {
         alt: cardTitle
     };
 
+    saveButton.textContent = 'Сохранение...';
+
     uploadNewCard(newCardData)
         .then((data) => {
-            const newCard = createCard(data, deleteCard, openImagePopup);
+            const newCard = createCard(data, openImagePopup);
             cardsContainer.prepend(newCard);
         
-            closePopup(popupNewCard);
             newCardForm.reset();
+            closePopup(popupNewCard);
         })
         .catch((error) => {
             console.log(error);
         })
-
-    
-}
+        .finally(() => {
+        
+            saveButton.textContent = 'Сохранить';
+        })
+};
 
 newCardForm.addEventListener('submit', addNewCard);
 
@@ -154,11 +154,46 @@ export function openImagePopup (link, title) {
     openPopup(popupImg);
 }
 
-//Validation
+//edit avatar popup
+avatar.addEventListener('click', () => {
+    openPopup(popupAvatar);
+
+    avatarLinkInput.value = document.querySelector('.profile__image').style.backgroundImage;
+});
+
+function updateAvatar (evt) {
+    evt.preventDefault();
+    const avatar = avatarLinkInput.value;
+
+    saveButton.textContent = 'Сохранение...';
+    
+    updateProfileAvatar(avatar)
+    .then((data) => {
+        document.querySelector('.profile__image').style.backgroundImage = `url(${data.avatar})`;
+    
+        closePopup(popupAvatar);
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+    .finally(() => {
+        saveButton.textContent = 'Сохранить';
+    })
+};
+
+popupAvatar.addEventListener('submit', updateAvatar);
+
+//closing popups
+
+closePopupButtons.forEach((button) => {
+    button.addEventListener('click', (evt) => {
+         const popup = evt.target.closest('.popup');
+         closePopup(popup);
+     })
+ });
 
 
 
-/*
 enableValidation({
     formSelector: '.popup__form',
     inputSelector: '.popup__input',
@@ -168,7 +203,7 @@ enableValidation({
     errorClass: 'popup__error_visible'
   });
 
-*/
+
 
 
 

@@ -1,5 +1,4 @@
 
-
 const config = {
     path: 'https://mesto.nomoreparties.co/v1/wff-cohort-28',
     headers: {
@@ -12,6 +11,7 @@ const handleResponse = (res) => {
     if (res.ok) {
         return res.json()
     }
+    return Promise.reject(`Ошибка: ${res.status}`);
 }
 
 export const getUserInfo = () => {
@@ -22,7 +22,7 @@ export const getUserInfo = () => {
         .then(handleResponse)
     }
 
-    //4. Загрузка карточек с сервера
+//4. Загрузка карточек с сервера
 
  export  const getCards = () => {
       return fetch(`${config.path}/cards`, {
@@ -31,26 +31,9 @@ export const getUserInfo = () => {
         })
         .then(handleResponse)
     }
-/*
-    const getUsersInfo = () => {
-        fetch(`${path}/users`, {
-            method: 'GET',
-            headers: {
-                authorization: '73257957-f257-4700-80d8-fbcf29a02af0'
-            }
-        })
-        .then((res) => {
-            return res.json();
-         })
-         .then((users) => {
-            console.log(users);
-         })
-    }
-*/
-/*5. Редактирование профиля
-Отредактированные данные профиля должны сохраняться на сервере. Для этого отправьте запрос методом PATCH:
-PATCH https://nomoreparties.co/v1/cohortId/users/me 
-*/
+
+//5. Редактирование профиля
+
 
 export const changeProfileInfo = (newProfileInfo) => {
     return fetch(`${config.path}/users/me`, {
@@ -61,10 +44,7 @@ export const changeProfileInfo = (newProfileInfo) => {
     .then(handleResponse)    
 };
     
-/*6. Добавление новой карточки
-Чтобы добавить на сервер новую карточку, отправьте POST-запрос:
-POST https://nomoreparties.co/v1/cohortId/cards 
-*/
+//6. Добавление новой карточки
 
 export const uploadNewCard = (newCardData) => {
     return fetch(`${config.path}/cards`, {
@@ -75,11 +55,8 @@ export const uploadNewCard = (newCardData) => {
     .then(handleResponse)    
 };
 
-/*8. Удаление карточки
-Прежде чем браться за работу с API, исправьте элемент карточки. Сделайте так, 
-чтобы иконка удаления была только на созданных вами карточках, так как удалять 
-чужие карточки нельзя.
-*/
+//8. Удаление карточки
+
 export const toDeleteCard = (cardId) => {
     return fetch(`${config.path}/cards/${cardId}`, {
         method: 'DELETE',
@@ -106,7 +83,14 @@ export const unlikeCard = (cardId) => {
 };
 
 //10. Обновление аватара пользователя
-
+export const updateProfileAvatar = (avatarImage) => {
+    return fetch(`${config.path}/users/me/avatar`, {
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify({avatar: avatarImage})
+    })
+    .then(handleResponse)    
+};
 
 
 
