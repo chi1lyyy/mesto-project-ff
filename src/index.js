@@ -6,6 +6,7 @@ import { clearValidation, enableValidation} from './scripts/validatition.js';
 import { getUserInfo, getCards, changeProfileInfo, uploadNewCard } from './scripts/api.js';
 
 const cardsContainer = document.querySelector('.places__list');
+export let currentUser;
 
 Promise.all([getUserInfo(), getCards()])
 
@@ -14,8 +15,10 @@ Promise.all([getUserInfo(), getCards()])
         document.querySelector('.profile__title').textContent = userData.name;
         document.querySelector('.profile__description').textContent = userData.about;
 
+        currentUser = userData._id;
+
         cardsData.forEach ((card) => {
-            const cardElement = createCard(card, deleteCard, likeCard, openImagePopup);
+            const cardElement = createCard(card, deleteCard, openImagePopup);
             cardsContainer.append(cardElement);
         });
     })
@@ -124,7 +127,7 @@ function addNewCard (evt) {
 
     uploadNewCard(newCardData)
         .then((data) => {
-            const newCard = createCard(data, deleteCard, likeCard, openImagePopup);
+            const newCard = createCard(data, deleteCard, openImagePopup);
             cardsContainer.prepend(newCard);
         
             closePopup(popupNewCard);
