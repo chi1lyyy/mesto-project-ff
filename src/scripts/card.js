@@ -47,7 +47,6 @@ export function createCard (cardData, deleteCard, likeCard, openImagePopup, curr
         openImagePopup(cardData.link, cardData.name);
     })
 
-
     return cardElement;
 };
 
@@ -62,27 +61,20 @@ export function deleteCard (cardId, cardElement) {
 };
 
 export function likeCard (cardId, isLiked, likesCount, likeButton) {
-    if (!isLiked) {
-        return toLikeCard(cardId)
-        .then((updatedCardData) => {
-            likesCount.textContent = updatedCardData.likes.length;
-            likeButton.classList.add('card__like-button_is-active');
-            isLiked = true;                
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-       } else {
-        return unlikeCard(cardId)
-        .then((updatedCardData) => {
-            likesCount.textContent = updatedCardData.likes.length;
-            likeButton.classList.remove('card__like-button_is-active'); 
-            isLiked = false; 
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-       }
-};
+    return (isLiked ? unlikeCard(cardId) : toLikeCard(cardId))
+    .then((updatedCardData) => {
+        likesCount.textContent = updatedCardData.likes.length;
 
+        if(!isLiked) {
+            likeButton.classList.add('card__like-button_is-active');
+            return true;
+        } else {
+            likeButton.classList.remove('card__like-button_is-active');
+            return false;
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+};
 

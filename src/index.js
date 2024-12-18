@@ -2,7 +2,7 @@ import './index.css';
 import { createCard, deleteCard, likeCard} from './scripts/card.js';
 import { openPopup, closePopup } from './scripts/modal.js';
 import { clearValidation, enableValidation} from './scripts/validatition.js';
-import { getUserInfo, getCards, changeProfileInfo, uploadNewCard, updateProfileAvatar, toLikeCard } from './scripts/api.js';
+import { getUserInfo, getCards, changeProfileInfo, uploadNewCard, updateProfileAvatar} from './scripts/api.js';
 
 const cardsContainer = document.querySelector('.places__list');
 
@@ -13,7 +13,7 @@ Promise.all([getUserInfo(), getCards()])
         profileName.textContent = userData.name;
         profileDescription.textContent = userData.about;
 
-        let currentUser = userData._id;
+        currentUser = userData._id;
 
         cardsData.forEach ((card) => {
             const cardElement = createCard(card, deleteCard, likeCard, openImagePopup, currentUser);
@@ -23,6 +23,7 @@ Promise.all([getUserInfo(), getCards()])
     .catch((error) => {
         console.log('Ошибка:', error);
     });
+let currentUser;
 
 //Popups
 const popups = document.querySelectorAll('.popup');
@@ -151,24 +152,23 @@ newCardForm.addEventListener('submit', addNewCard);
 //edit avatar popup
 avatar.addEventListener('click', () => {
     openPopup(popupAvatar);
+    clearValidation(avatarForm, validationConfig);
     avatarForm.reset();
-    clearValidation(popupAvatar, validationConfig);
 });
 
 function updateAvatar (evt) {
     evt.preventDefault();
-    clearValidation(avatarForm, validationConfig);
-    const avatar = avatarLinkInput.value;
+   
+    const avatarLink = avatarLinkInput.value;
 
     const saveButton = popupAvatar.querySelector('.popup__button');
     saveButton.textContent = 'Сохранение...';
     
-    updateProfileAvatar(avatar)
+    updateProfileAvatar(avatarLink)
     .then((data) => {
         avatar.style.backgroundImage = `url(${data.avatar})`;
     
         closePopup(popupAvatar);
-        popupAvatar.reset();
     })
     .catch((error) => {
         console.log(error);
@@ -190,17 +190,12 @@ closePopupButtons.forEach((button) => {
  });
 
 function openImagePopup (link, title) {
-   
-
     image.src = link;
     caption.textContent = title;
     image.alt = title;
     
     openPopup(popupImg);
 };
-
-
-
 
 enableValidation(validationConfig);
 
