@@ -152,8 +152,9 @@ newCardForm.addEventListener('submit', addNewCard);
 //edit avatar popup
 avatar.addEventListener('click', () => {
     openPopup(popupAvatar);
-    clearValidation(avatarForm, validationConfig);
+   
     avatarForm.reset();
+    clearValidation(avatarForm, validationConfig);
 });
 
 function updateAvatar (evt) {

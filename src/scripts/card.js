@@ -34,13 +34,7 @@ export function createCard (cardData, deleteCard, likeCard, openImagePopup, curr
 
     likeButton.addEventListener('click', (evt) => {
        evt.preventDefault();
-       likeCard(cardId, isLiked, likesCount, likeButton)
-        .then((newLike) => {
-            isLiked = newLike;
-        })
-       .catch((err) => {
-            console.log(err);
-        });
+       likeCard(cardId, likesCount, likeButton)
     });
 
     cardImage.addEventListener('click', () => {
@@ -60,7 +54,8 @@ export function deleteCard (cardId, cardElement) {
     });
 };
 
-export function likeCard (cardId, isLiked, likesCount, likeButton) {
+export function likeCard (cardId, likesCount, likeButton) {
+    const isLiked = likeButton.classList.contains('card__like-button_is-active');
     return (isLiked ? unlikeCard(cardId) : toLikeCard(cardId))
     .then((updatedCardData) => {
         likesCount.textContent = updatedCardData.likes.length;
